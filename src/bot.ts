@@ -55,6 +55,7 @@ client.on("message", async (msg) => {
 
         if (CMD === "leave") {
             msg.member?.voice.channel?.leave();
+            ServerPool.delete(msg.guild?.id.toString()!);
             return;
         }
 
@@ -96,14 +97,12 @@ client.on("message", async (msg) => {
 
             if (args[0].includes("https://www.youtube.com/watch")) {
                 if (Server!.songs.length > 0) {
-                    const info = await ytdl.getInfo(args[0]);
                     Server!.songs.push(args[0]);
+                    const info = await ytdl.getInfo(args[0]);
                     msg.channel.send(`▶️ ${info.videoDetails.title} wurde zur Wiedergabeliste hinzugefügt!`);
                 } else {
                     Server!.songs.push(args[0]);
-                    const info = await ytdl.getInfo(args[0]);
                     play(msg.guild!, Server!.songs[0], msg);
-                    msg.channel.send(`▶️ ${info.videoDetails.title} wird nun abgespielt.`);
                 }
             } else {
                 if (Server!.songs.length > 0) {
